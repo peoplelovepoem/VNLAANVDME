@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Media;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Tetris
@@ -19,8 +14,13 @@ namespace Tetris
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MenuForm());
-            
+            GameSetting.AudioPlayback.Start();
+            try
+            {
+                Application.Run(new TetrisApplicationContext());
+            }
+            finally { GameSetting.AudioPlayback.Stop(); }
+
         }
     }
 }

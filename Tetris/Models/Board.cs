@@ -1,28 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tetris.GameLogic;
+﻿using Tetris.GameLogic;
 using Tetris.GameSetting;
+
 namespace Tetris.Models
 {
     public class Board
     {
-        public int [,] Grid { get; private set; }
+        public int[,] Grid
+        {
+            get; private set;
+        }
 
         public Board()
         {
             Grid = new int[Setting.row, Setting.col];
         }
-        private bool IsInside(int x,int y)
+
+        private bool IsInside(int x, int y)
         {
             return x >= 0 && x < Setting.row && y >= 0 && y < Setting.col;
         }
-        private bool IsCollide(int x,int y)
+
+        private bool IsCollide(int x, int y)
         {
             return Grid[x, y] != 0;
         }
+
         public bool CheckCollision(Block block)
         {
             int size = block.shape.GetLength(0);
@@ -32,7 +34,7 @@ namespace Tetris.Models
                 {
                     if (block.shape[i, j] != 0)
                     {
-                        if(!IsInside(block.y + i, block.x + j) || IsCollide(block.y + i, block.x + j))
+                        if (!IsInside(block.y + i, block.x + j) || IsCollide(block.y + i, block.x + j))
                         {
                             return true;
                         }
@@ -41,6 +43,7 @@ namespace Tetris.Models
             }
             return false;
         }
+
         public void LockBlock(Block block)
         {
             int size = block.shape.GetLength(0);
@@ -55,6 +58,7 @@ namespace Tetris.Models
                 }
             }
         }
+
         public int ClearLine()
         {
             int ClearedLine = 0;

@@ -103,6 +103,10 @@ namespace Tetris
             Application.Exit();
         }
 
-        
+        private void button1_Click(object sender, EventArgs e)
+        {
+            LeaderboardForm leaderboard = new LeaderboardForm();
+            leaderboard.ShowDialog();
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -9,12 +8,11 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms;
 using Tetris.GameLogic;
 using Tetris.GameSetting;
 using Tetris.Models;
 using System.IO;
-using System.Media;
+using Microsoft.VisualBasic;
 namespace Tetris
 {
     public partial class Form1 : Form
@@ -114,6 +112,8 @@ namespace Tetris
             {
                 gameTimer.Stop();
                 isGameOver = true;
+                // chèn thêm gọi hàm xử lý Game Over và lưu điểm vào đây!
+                ShowGameOverAndSaveScore();
                 try
                 {
                     string soundPath = Path.Combine(
@@ -402,5 +402,33 @@ namespace Tetris
 
             this.Close(); // Đóng game, quay lại MenuForm.
         }
+        private void ShowGameOverAndSaveScore()
+        {
+            // 1. Hiện thông báo điểm số (hãy chắc chắn biến lưu điểm của bạn tên là "score")
+            MessageBox.Show($"Trò chơi kết thúc! Số điểm của bạn: {score}", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // 2. Yêu cầu nhập tên người chơi
+            string playerName = Microsoft.VisualBasic.Interaction.InputBox(
+                "Nhập tên của bạn để ghi danh vào bảng xếp hạng:",
+                "Ghi Danh Kỷ Lục",
+                "Player 1"
+            );
+
+            if (string.IsNullOrWhiteSpace(playerName))
+            {
+                playerName = "Ẩn danh";
+            }
+
+            // 3. Gọi LeaderboardManager lưu điểm
+            LeaderboardManager.SaveScore(playerName, score);
+
+            // 4. Mở bảng xếp hạng dưới dạng hộp thoại
+            LeaderboardForm leaderboard = new LeaderboardForm();
+            leaderboard.ShowDialog();
+
+            // 5. Đóng màn chơi để quay lại Menu chính
+            this.Close();
+        }
+
     }
 }

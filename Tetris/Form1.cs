@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Forms;
 using Tetris.GameLogic;
 using Tetris.GameSetting;
 using Tetris.Models;
-
+using System.IO;
+using System.Media;
 namespace Tetris
 {
     public partial class Form1 : Form
@@ -23,42 +27,41 @@ namespace Tetris
 
         private bool isGameOver = false;
         private int score = 0;
-
+        private SoundPlayer backgroundMusic;
         public Form1()
         {
             InitializeComponent();
             this.KeyPreview = true;
             this.StartPosition = FormStartPosition.CenterScreen;
+            
+            try
+            {
+                string soundPath = Path.Combine(
+                    Application.StartupPath,
+                    "Sounds",
+                    "msbg.wav");
 
-            // Tạo nút Quay về Menu bằng code tự động
-            CreateMenuButton();
+                backgroundMusic = new SoundPlayer(soundPath);
+                backgroundMusic.PlayLooping();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "Lỗi nhạc nền: " + ex);
+            }
+
+            this.FormClosed += (sender, e) =>
+            {
+                backgroundMusic?.Stop();
+                backgroundMusic?.Dispose();
+            };
+            
 
             InitGame();
         }
 
-        // --- TẠO NÚT QUAY VỀ MENU ---
-        private void CreateMenuButton()
-        {
-            Button btnMenu = new Button();
-            btnMenu.Text = "HOME";
-            btnMenu.Font = new Font("Arial", 10, FontStyle.Bold);
-            btnMenu.Size = new Size(90, 32);
-            btnMenu.Location = new Point(10, 10); // Vị trí góc trên bên trái
-            btnMenu.BackColor = Color.FromArgb(255, 235, 200);
-            btnMenu.ForeColor = Color.FromArgb(30, 30, 30);
-            btnMenu.FlatStyle = FlatStyle.Popup;
-            btnMenu.Cursor = Cursors.Hand;
 
-            // Xử lý sự kiện khi bấm nút
-            btnMenu.Click += (sender, e) =>
-            {
-                gameTimer?.Stop();
-                this.Close(); // Đóng Form1, tự động quay về MenuForm
-            };
-
-            this.Controls.Add(btnMenu);
-            btnMenu.BringToFront(); // Đưa nút lên lớp trên cùng để không bị che
-        }
+        
 
         public void InitGame()
         {
@@ -111,6 +114,20 @@ namespace Tetris
             {
                 gameTimer.Stop();
                 isGameOver = true;
+                try
+                {
+                    string soundPath = Path.Combine(
+                                                Application.StartupPath,
+                                                "Sounds",
+                                                "Lose.wav");
+                    SoundPlayer soundPlayer = new SoundPlayer(soundPath);
+                    soundPlayer.Play();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        "Lỗi phát tiếng thua: " + ex);
+                }
                 picBoard.Invalidate();
             }
         }
@@ -128,6 +145,21 @@ namespace Tetris
                 int lines = board.ClearLine();
                 if (lines > 0)
                 {
+
+                    try
+                    {
+                        string soundPath = Path.Combine(
+                            Application.StartupPath,
+                            "Sounds",
+                            "ClearLine.wav");
+                        SoundPlayer soundPlayer = new SoundPlayer(soundPath);
+                        soundPlayer.Play();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(
+                            "Lỗi phát tiếng xóa hàng: " + ex);
+                    }
                     if (lines == 1) score += 100;
                     else if (lines == 2) score += 300;
                     else if (lines == 3) score += 500;
@@ -179,6 +211,7 @@ namespace Tetris
 
             if (isGameOver)
             {
+                
                 using (SolidBrush overlayBrush = new SolidBrush(Color.FromArgb(180, 0, 0, 0)))
                 {
                     g.FillRectangle(overlayBrush, 0, 0, picBoard.Width, picBoard.Height);
@@ -202,6 +235,8 @@ namespace Tetris
                     g.DrawString("Nhấn Enter để chơi lại (hoặc Esc về Menu)", fontSub, whiteBrush, subRect, sf);
                     g.DrawString($"Tổng điểm: {score}", fontSub, yellowBrush, scoreRect, sf);
                 }
+                
+                
             }
         }
 
@@ -346,11 +381,26 @@ namespace Tetris
             }
         }
 
-        private void picNextBlock_Click(object sender, EventArgs e) { }
 
-        private void Form1_Load(object sender, EventArgs e)
+
+        private void btnMenu_Click(object sender, EventArgs e)
         {
+            try
+            {
+                string path = Path.Combine(Application.StartupPath, "Sounds", "ui_click.wav");
+                SoundPlayer soundPlayer = new SoundPlayer(path);
+                soundPlayer.Play();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                            "Lỗi phát tiếng click: " + ex);
+            }
+            gameTimer?.Stop();
 
+            backgroundMusic?.Stop();
+
+            this.Close(); // Đóng game, quay lại MenuForm.
         }
     }
 }

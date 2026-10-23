@@ -32,6 +32,7 @@
             this.picNextBlock = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblScore = new System.Windows.Forms.Label();
+            this.btnMenu = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picBoard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picNextBlock)).BeginInit();
             this.SuspendLayout();
@@ -59,7 +60,6 @@
             this.picNextBlock.Size = new System.Drawing.Size(120, 120);
             this.picNextBlock.TabIndex = 1;
             this.picNextBlock.TabStop = false;
-            this.picNextBlock.Click += new System.EventHandler(this.picNextBlock_Click);
             this.picNextBlock.Paint += new System.Windows.Forms.PaintEventHandler(this.picNextBlock_Paint);
             // 
             // label1
@@ -84,12 +84,27 @@
             this.lblScore.TabIndex = 3;
             this.lblScore.Text = "label2";
             // 
+            // btnMenu
+            // 
+            this.btnMenu.BackColor = System.Drawing.Color.Sienna;
+            this.btnMenu.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnMenu.Font = new System.Drawing.Font("SVN-Cookies", 19F, System.Drawing.FontStyle.Bold);
+            this.btnMenu.ForeColor = System.Drawing.Color.White;
+            this.btnMenu.Location = new System.Drawing.Point(26, 24);
+            this.btnMenu.Name = "btnMenu";
+            this.btnMenu.Size = new System.Drawing.Size(155, 44);
+            this.btnMenu.TabIndex = 4;
+            this.btnMenu.Text = "HOME";
+            this.btnMenu.UseVisualStyleBackColor = false;
+            this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(919, 611);
+            this.Controls.Add(this.btnMenu);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.picNextBlock);
             this.Controls.Add(this.lblScore);
@@ -97,7 +112,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
             this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picBoard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picNextBlock)).EndInit();
             this.ResumeLayout(false);
@@ -111,6 +125,7 @@
         private System.Windows.Forms.PictureBox picNextBlock;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblScore;
+        private System.Windows.Forms.Button btnMenu;
     }
 }
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -74,6 +74,23 @@
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\ScoreEntry.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="GameUI\OutlinedLabel.cs"><SubType>Component</SubType></Compile>
+    <Compile Include="GameSetting\AudioSettings.cs" />
+    <Compile Include="GameSetting\AudioPlayback.cs" />
+    <Compile Include="Form1.Rendering.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsForm.cs"><SubType>Form</SubType></Compile>
+    <Compile Include="SettingsForm.Designer.cs"><DependentUpon>SettingsForm.cs</DependentUpon></Compile>
+    <Compile Include="Models\PlayerSession.cs" />
+    <Compile Include="GameSetting\PlayerNameStore.cs" />
+    <Compile Include="TetrisApplicationContext.cs" />
+    <Compile Include="WelcomeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WelcomeForm.Designer.cs">
+      <DependentUpon>WelcomeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -93,6 +110,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="WelcomeForm.resx">
+      <DependentUpon>WelcomeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -112,6 +132,10 @@
     <Folder Include="GameUI\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\settings-gear-peru.png" />
+    <Content Include="Sounds\music_game.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sounds\msbg.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

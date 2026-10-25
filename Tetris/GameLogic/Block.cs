@@ -1,18 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tetris.GameLogic
+﻿namespace Tetris.GameLogic
 {
     public class Block
     {
-        public int[,] shape { get; private set; }
-        public int x { get; set; }
-        public int y { get; set; }
-        public int ID { get; private set; }
+        public int[,] shape
+        {
+            get; private set;
+        }
+
+        public int x
+        {
+            get; set;
+        }
+
+        public int y
+        {
+            get; set;
+        }
+
+        public int ID
+        {
+            get; private set;
+        }
 
         public Block(int x, int y, int id)
         {
@@ -21,6 +29,7 @@ namespace Tetris.GameLogic
             this.ID = id;
             SetShape(id);
         }
+
         private void SetShape(int id)
         {
             switch (id)
@@ -85,13 +94,20 @@ namespace Tetris.GameLogic
             }
         }
 
+        public Block Copy()
+        {
+            var copy = new Block(x, y, ID);
+            copy.shape = (int[,])shape.Clone();
+            return copy;
+        }
+
         public void RotateCW()
         {
             int length = shape.GetLength(0);
             int[,] rotated = new int[length, length];
-            for(int r = 0; r < length; r++)
+            for (int r = 0; r < length; r++)
             {
-                for(int c = 0; c < length; c++)
+                for (int c = 0; c < length; c++)
                 {
                     rotated[c, length - 1 - r] = shape[r, c];
                 }

@@ -24,17 +24,19 @@ internal static class WelcomeFlowTests
     {
         Application.EnableVisualStyles();
         string name, error;
-        foreach (string invalid in new[] { "", "   ", new string('a', 21), "Nam|An", "Nam\nAn", "\tNam" })
+        foreach (string invalid in new[] { "", "   ", new string('a', 21), "Nam|An", "Nam\nAn", "\tNam", "Nam An", "An_01", "An-01", "An.01", "@An", "An!", "An😊", "An\u200B", "An\u00A0B" })
             Check(!PlayerSession.TryValidateName(invalid, out name, out error), "Invalid name accepted");
-        Check(PlayerSession.TryValidateName("  Nguyễn An  ", out name, out error) && name == "Nguyễn An", "Vietnamese/trim");
+        Check(PlayerSession.TryValidateName("  NguyễnAn  ", out name, out error) && name == "NguyễnAn", "Vietnamese/trim");
         Check(PlayerSession.TryValidateName(new string('a', 20), out name, out error), "20-character boundary");
+        foreach (string valid in new[] { "An123", "123456", "ĐặngThịÁnh", "ABCxyz" })
+            Check(PlayerSession.TryValidateName(valid, out name, out error), "Letters and digits accepted");
         string temp = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test-data");
         Directory.CreateDirectory(temp);
         string nameFile = Path.Combine(temp, "name.txt");
         File.Delete(nameFile);
         var store = new PlayerNameStore(nameFile);
         Check(store.Load() == "", "Missing file");
-        Check(store.TrySave("Nguyễn An") && store.Load() == "Nguyễn An", "Remember name");
+        Check(store.TrySave("NguyễnAn") && store.Load() == "NguyễnAn", "Remember name");
         File.WriteAllText(nameFile, "Bad|Name");
         Check(store.Load() == "", "Corrupt name");
         File.WriteAllBytes(nameFile, new byte[] { 255, 255 });
@@ -46,7 +48,7 @@ internal static class WelcomeFlowTests
         var scores = LeaderboardManager.LoadScores();
         Check(scores.Count == 2 && scores[0].PlayerName == "New", "Legacy/new records and invalid lines");
         Check(scores[0].DurationText == "01:05" && scores[1].DurationText == "—", "Duration display");
-        LeaderboardManager.SaveScore("Nguyễn An", 300, 125);
+        LeaderboardManager.SaveScore("NguyễnAn", 300, 125);
         scores = LeaderboardManager.LoadScores();
         Check(scores.Count == 3 && scores[0].DurationSeconds == 125 && scores[2].PlayerName == "Old", "Save preserves legacy");
         using (var board = new LeaderboardForm())
@@ -64,9 +66,15 @@ internal static class WelcomeFlowTests
             box.Text = " ";
             accept.Invoke(welcome, new object[] { null, EventArgs.Empty });
             Check(!accepted && ((Label)Field(welcome, "lblError")).Text.Length > 0, "Inline validation");
-            box.Text = "Nguyễn An";
+            foreach (string invalid in new[] { "An@123", "Nguyễn An", "An_01", "An😊" })
+            {
+                box.Text = invalid;
+                accept.Invoke(welcome, new object[] { null, EventArgs.Empty });
+                Check(!accepted && session.PlayerName == null, "Invalid text cannot enter menu");
+            }
+            box.Text = "NguyễnAn";
             accept.Invoke(welcome, new object[] { null, EventArgs.Empty });
-            Check(accepted && session.PlayerName == "Nguyễn An", "Accept name into session");
+            Check(accepted && session.PlayerName == "NguyễnAn", "Accept name into session");
             foreach (float scale in new[] { 1f, 1.25f, 1.5f })
             {
                 using (var view = new WelcomeForm(session, store))
@@ -86,10 +94,10 @@ internal static class WelcomeFlowTests
                 }
             }
         }
-        session.SetName("Round Owner");
+        session.SetName("RoundOwner");
         using (var game = new Form1(session))
         {
-            session.SetName("Changed Later");
+            session.SetName("ChangedLater");
             game.Show();
             var timer = (Timer)Field(game, "gameTimer");
             timer.Stop();
@@ -107,7 +115,7 @@ internal static class WelcomeFlowTests
                 Application.DoEvents();
             }
             scores = LeaderboardManager.LoadScores();
-            Check(scores.FindAll(x => x.PlayerName == "Round Owner").Count == 1, "Game over saves once with round name");
+            Check(scores.FindAll(x => x.PlayerName == "RoundOwner").Count == 1, "Game over saves once with round name");
             game.GetType().GetMethod("ShowGameOverAndSaveScore", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(game, null);
             Check(LeaderboardManager.LoadScores().Count == scores.Count, "No duplicate result");
             Check(game.IsDisposed && !timer.Enabled, "Game over closes form and stops timer");
@@ -118,7 +126,7 @@ internal static class WelcomeFlowTests
         {
             Form welcome = context.MainForm;
             var current = (PlayerSession)Field(welcome, "session");
-            current.SetName("Session Test");
+            current.SetName("SessionTest");
             ((EventHandler)Field(welcome, "PlayerAccepted"))(welcome, EventArgs.Empty);
             Check(welcome.IsDisposed && context.MainForm is MenuForm, "Welcome to menu");
             Form menu = context.MainForm;

@@ -18,8 +18,8 @@ namespace Tetris.Models
                 error = "Tên không được chứa ký tự điều khiển.";
             else if (name.Length < 1 || name.Length > 20)
                 error = "Vui lòng nhập tên từ 1 đến 20 ký tự.";
-            else if (name.Contains("|"))
-                error = "Tên không được chứa dấu |.";
+            else if (name.Any(c => !char.IsLetterOrDigit(c)))
+                error = "Tên chỉ được chứa chữ và số, không có dấu cách.";
             return error == null;
         }
 

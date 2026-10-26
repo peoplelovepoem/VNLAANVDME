@@ -20,7 +20,7 @@ internal static class GameplayFeaturesTests
     [STAThread]
     static void Main()
     {
-        var session = new PlayerSession(); session.SetName("Feature Test");
+        var session = new PlayerSession(); session.SetName("FeatureTest");
         using (var game = new Form1(session))
         {
             game.Show(); ((Timer)Field(game,"gameTimer")).Stop();

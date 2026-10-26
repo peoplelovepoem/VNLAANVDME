@@ -37,7 +37,7 @@
             this.lblHelp.Location = new System.Drawing.Point(24, 78);
             this.lblHelp.Size = new System.Drawing.Size(480, 240);
             this.lblHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);
-            this.lblHelp.Text = "HƯỚNG DẪN CHƠI\r\n\r\nTrái / Phải: Di chuyển khối.\r\nMũi tên Lên: Xoay khối.\r\nMũi tên Xuống: Rơi nhanh hơn.\r\nEsc: Tạm dừng / Cài đặt. C hoặc Shift: Hold.\r\n\r\nXếp đầy hàng ngang để xóa hàng.\r\nXóa 1 / 2 / 3 / 4 hàng: 100 / 300 / 500 / 800 điểm.\r\nKhối mới không còn chỗ xuất hiện thì kết thúc ván.\r\nĐóng bảng xếp hạng, chọn CHƠI NGAY để chơi lại.";
+            this.lblHelp.Text = "HƯỚNG DẪN CHƠI\r\n\r\nTrái / Phải: Di chuyển khối.\r\nMũi tên Lên: Xoay khối.\r\nMũi tên Xuống: Rơi nhanh hơn.\r\nEsc: Tạm dừng / Cài đặt.\r\n\r\nXếp đầy hàng ngang để xóa hàng.\r\nXóa 1 / 2 / 3 / 4 hàng: 100 / 300 / 500 / 800 điểm.\r\nKhối mới không còn chỗ xuất hiện thì kết thúc ván.\r\nĐóng bảng xếp hạng, chọn CHƠI NGAY để chơi lại.";
             this.chkMusic.Location = new System.Drawing.Point(24, 314);
             this.chkMusic.Size = new System.Drawing.Size(480, 32);
             this.chkMusic.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F);

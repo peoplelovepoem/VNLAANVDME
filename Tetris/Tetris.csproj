@@ -74,14 +74,21 @@
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\ScoreEntry.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="GameUI\OutlinedLabel.cs"><SubType>Component</SubType></Compile>
+    <Compile Include="GameUI\OutlinedLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GameSetting\AudioSettings.cs" />
     <Compile Include="GameSetting\AudioPlayback.cs" />
     <Compile Include="Form1.Rendering.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm.cs"><SubType>Form</SubType></Compile>
-    <Compile Include="SettingsForm.Designer.cs"><DependentUpon>SettingsForm.cs</DependentUpon></Compile>
+    <Compile Include="SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\PlayerSession.cs" />
     <Compile Include="GameSetting\PlayerNameStore.cs" />
     <Compile Include="TetrisApplicationContext.cs" />
@@ -129,7 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Asset\" />
-    <Folder Include="GameUI\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\settings-gear-peru.png" />

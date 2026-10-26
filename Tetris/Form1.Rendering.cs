@@ -13,7 +13,7 @@ namespace Tetris
             if (WindowState == FormWindowState.Minimized)
                 return;
             const int margin = 24, gap = 18;
-            int side = Math.Max(130, Math.Max(picNextBlock.Width, picHold.Width));
+            int side = Math.Max(130, picNextBlock.Width);
             int maxWidth = Math.Max(10, ClientSize.Width - 2 * (margin + side + gap));
             int maxHeight = Math.Max(20, ClientSize.Height - 2 * margin);
             int cell = Math.Max(1, Math.Min((Math.Min(designedBoardBounds.Width, maxWidth) - 2) / 10,
@@ -26,11 +26,9 @@ namespace Tetris
             x = Math.Max(margin + side + gap, Math.Min(x, ClientSize.Width - margin - side - gap - width));
             y = Math.Max(margin, Math.Min(y, ClientSize.Height - margin - height));
             picBoard.SetBounds(x, y, width, height);
-            lblHold.Location = new Point(x - side - gap, y);
-            picHold.SetBounds(lblHold.Left, lblHold.Bottom + 6, side, 104);
-            lblScore.Location = new Point(lblHold.Left, picHold.Bottom + 24);
+            lblScore.Location = new Point(x - side - gap, y + 158);
             label1.Location = new Point(picBoard.Right + gap, y);
-            picNextBlock.SetBounds(label1.Left, label1.Bottom + 6, side, 218);
+            picNextBlock.SetBounds(label1.Left, label1.Bottom + 6, side, 120);
             btnGameSettings.Location = new Point(ClientSize.Width - btnGameSettings.Width - 20,
                 ClientSize.Height - btnGameSettings.Height - 20);
             Invalidate(true);
@@ -39,12 +37,11 @@ namespace Tetris
         private void DrawFrames(Graphics g)
         {
             using (var pen = new Pen(Color.SaddleBrown, 3))
-                foreach (Control control in new Control[] { picHold, picNextBlock })
-                {
-                    var r = control.Bounds;
-                    r.Inflate(2, 2);
-                    g.DrawRectangle(pen, r);
-                }
+            {
+                var bounds = picNextBlock.Bounds;
+                bounds.Inflate(2, 2);
+                g.DrawRectangle(pen, bounds);
+            }
         }
 
         private Rectangle GetBoardRectangle()
@@ -66,10 +63,7 @@ namespace Tetris
                 for (int c = 0; c < Setting.col; c++)
                     if (board.Grid[r, c] != 0)
                         DrawCell(g, c, r, board.Grid[r, c]);
-            var ghost = GetGhostBlock();
-            if (ghost != null && ghost.y != currentBlock.y)
-                DrawBlock(g, ghost, true);
-            DrawBlock(g, currentBlock, false);
+            DrawBlock(g, currentBlock);
             int cell = bounds.Width / 10;
             using (var pen = new Pen(Color.FromArgb(145, 130, 110)))
             {
@@ -85,15 +79,15 @@ namespace Tetris
             }
         }
 
-        private void DrawBlock(Graphics g, Block block, bool ghost)
+        private void DrawBlock(Graphics g, Block block)
         {
             for (int r = 0; r < block.shape.GetLength(0); r++)
                 for (int c = 0; c < block.shape.GetLength(1); c++)
                     if (block.shape[r, c] != 0)
-                        DrawCell(g, block.x + c, block.y + r, block.ID, ghost);
+                        DrawCell(g, block.x + c, block.y + r, block.ID);
         }
 
-        private void DrawCell(Graphics g, int x, int y, int id, bool ghost = false)
+        private void DrawCell(Graphics g, int x, int y, int id)
         {
             var bounds = GetBoardRectangle();
             if (bounds.IsEmpty)
@@ -101,8 +95,8 @@ namespace Tetris
             int cell = bounds.Width / 10;
             var rect = new Rectangle(bounds.Left + x * cell + 1, bounds.Top + y * cell + 1, cell - 2, cell - 2);
             Color color = GetColorByID(id);
-            using (var brush = new SolidBrush(ghost ? Color.FromArgb(35, color) : color))
-            using (var pen = new Pen(ghost ? Color.DimGray : ControlPaint.Light(color), ghost ? 2 : 1))
+            using (var brush = new SolidBrush(color))
+            using (var pen = new Pen(ControlPaint.Light(color), 1))
             {
                 g.FillRectangle(brush, rect);
                 g.DrawRectangle(pen, rect);
@@ -165,15 +159,8 @@ namespace Tetris
 
         private void picNextBlock_Paint(object sender, PaintEventArgs e)
         {
-            var ids = upcoming.ToArray();
-            int half = picNextBlock.ClientSize.Height / 2;
-            for (int i = 0; i < Math.Min(2, ids.Length); i++)
-                DrawPreview(e.Graphics, new Rectangle(0, i * half, picNextBlock.ClientSize.Width, half), ids[i]);
-        }
-
-        private void picHold_Paint(object sender, PaintEventArgs e)
-        {
-            DrawPreview(e.Graphics, picHold.ClientRectangle, heldId);
+            if (upcoming.Count > 0)
+                DrawPreview(e.Graphics, picNextBlock.ClientRectangle, upcoming.Peek());
         }
     }
 }

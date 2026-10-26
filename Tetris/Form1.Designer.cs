@@ -33,12 +33,9 @@
             this.picNextBlock = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.lblScore = new System.Windows.Forms.Label();
-            this.picHold = new System.Windows.Forms.PictureBox();
-            this.lblHold = new System.Windows.Forms.Label();
             this.btnGameSettings = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picBoard)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picNextBlock)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picHold)).BeginInit();
             this.SuspendLayout();
             //
             // picBoard
@@ -60,7 +57,7 @@
             this.picNextBlock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picNextBlock.Location = new System.Drawing.Point(609, 54);
             this.picNextBlock.Name = "picNextBlock";
-            this.picNextBlock.Size = new System.Drawing.Size(160, 218);
+            this.picNextBlock.Size = new System.Drawing.Size(160, 120);
             this.picNextBlock.TabIndex = 1;
             this.picNextBlock.TabStop = false;
             this.picNextBlock.Paint += new System.Windows.Forms.PaintEventHandler(this.picNextBlock_Paint);
@@ -87,28 +84,6 @@
             this.lblScore.TabIndex = 3;
             this.lblScore.Text = "SCORE: 0";
             //
-            // picHold
-            //
-            this.picHold.BackColor = System.Drawing.Color.PapayaWhip;
-            this.picHold.Location = new System.Drawing.Point(161, 54);
-            this.picHold.Name = "picHold";
-            this.picHold.Size = new System.Drawing.Size(130, 104);
-            this.picHold.TabIndex = 0;
-            this.picHold.TabStop = false;
-            this.picHold.Paint += new System.Windows.Forms.PaintEventHandler(this.picHold_Paint);
-            //
-            //
-            //
-            // lblHold
-            //
-            this.lblHold.AutoSize = true;
-            this.lblHold.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.lblHold.Location = new System.Drawing.Point(161, 24);
-            this.lblHold.Name = "lblHold";
-            this.lblHold.Size = new System.Drawing.Size(91, 24);
-            this.lblHold.TabIndex = 2;
-            this.lblHold.Text = "GIỮ KHỐI";
-            //
             // btnGameSettings
             //
             this.btnGameSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -132,8 +107,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.ClientSize = new System.Drawing.Size(919, 611);
-            this.Controls.Add(this.picHold);
-            this.Controls.Add(this.lblHold);
             this.Controls.Add(this.btnGameSettings);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.picNextBlock);
@@ -144,7 +117,6 @@
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.picBoard)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picNextBlock)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picHold)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -152,8 +124,6 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox picHold;
-        private System.Windows.Forms.Label lblHold;
         private System.Windows.Forms.Button btnGameSettings;
         private System.Windows.Forms.PictureBox picBoard;
         private System.Windows.Forms.PictureBox picNextBlock;

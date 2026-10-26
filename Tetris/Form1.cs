@@ -14,14 +14,12 @@ namespace Tetris
         private Board board = new Board();
         private Block currentBlock;
         private readonly Queue<int> upcoming = new Queue<int>();
-        private int? heldId;
-        private bool holdUsed;
         private Timer gameTimer;
         private readonly Random random = new Random();
         private bool isGameOver;
         private bool paused;
         private bool resultSaved;
-        private const int NextPieceCount = 2;
+        private const int NextPieceCount = 1;
         private static readonly int[] LineScores = { 0, 100, 300, 500, 800 };
         private int score;
         private readonly string playerName;
@@ -45,14 +43,6 @@ namespace Tetris
             designedClientSize = ClientSize;
             MinimumSize = new Size(700, 500);
             KeyPreview = true;
-            KeyDown += (s, e) =>
-            {
-                if (e.KeyCode == Keys.ShiftKey)
-                {
-                    HoldCurrentBlock();
-                    e.Handled = true;
-                }
-            };
             StartPosition = FormStartPosition.CenterScreen;
             Resize += (s, e) => LayoutGameBoard();
             picBoard.Resize += (s, e) => picBoard.Invalidate();
@@ -78,8 +68,6 @@ namespace Tetris
             }
             board = new Board();
             upcoming.Clear();
-            heldId = null;
-            holdUsed = false;
             isGameOver = false;
             paused = false;
             resultSaved = false;
@@ -91,7 +79,6 @@ namespace Tetris
             UpdateScoreDisplay();
             playTime.Restart();
             gameTimer.Start();
-            picHold.Invalidate();
         }
 
         private void FillQueue()
@@ -114,7 +101,6 @@ namespace Tetris
             currentBlock.x = (Setting.col - currentBlock.shape.GetLength(0)) / 2;
             picBoard.Invalidate();
             picNextBlock.Invalidate();
-            picHold.Invalidate();
             if (board.CheckCollision(currentBlock))
             {
                 isGameOver = true;
@@ -122,33 +108,6 @@ namespace Tetris
                 playTime.Stop();
                 BeginInvoke(new Action(ShowGameOverAndSaveScore));
             }
-        }
-
-        private void HoldCurrentBlock()
-        {
-            if (paused || isGameOver || holdUsed)
-                return;
-            int outgoing = currentBlock.ID;
-            int? incoming = heldId;
-            heldId = outgoing;
-            holdUsed = true;
-            if (incoming.HasValue)
-                ActivateBlock(incoming.Value);
-            else
-                SpawnNewBlock();
-        }
-
-        private Block GetGhostBlock()
-        {
-            if (currentBlock == null || isGameOver)
-                return null;
-            var ghost = currentBlock.Copy();
-            do
-            {
-                ghost.y++;
-            } while (!board.CheckCollision(ghost));
-            ghost.y--;
-            return ghost;
         }
 
         private void GameTick(object sender, EventArgs e)
@@ -167,8 +126,7 @@ namespace Tetris
                     AudioPlayback.PlayEffect("ClearLine.wav");
                     UpdateScoreDisplay();
                 }
-                holdUsed = false;
-                SpawnNewBlock();
+                    SpawnNewBlock();
             }
             picBoard.Invalidate();
         }
@@ -188,11 +146,6 @@ namespace Tetris
             }
             if (paused || isGameOver)
                 return true;
-            if (keyData == Keys.C || keyData == Keys.ShiftKey)
-            {
-                HoldCurrentBlock();
-                return true;
-            }
             var before = currentBlock.Copy();
             switch (keyData)
             {

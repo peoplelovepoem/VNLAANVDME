@@ -15,15 +15,15 @@ $csc = "$env:WINDIR/Microsoft.NET/Framework64/v4.0.30319/csc.exe"
 ```
 
 - WelcomeFlowTests: validation, nhớ tên, file hỏng, dữ liệu thành tích cũ/mới, lưu một lần khi thua và chuyển Welcome/Menu.
-- GameplayFeaturesTests: bóng dự đoán, Hold, hai khối tiếp theo, bố cục khi đổi kích thước, tạm dừng và các nút trong cài đặt.
+- GameplayFeaturesTests: khối rơi cổ điển, một khối tiếp theo, bố cục khi đổi kích thước, tạm dừng và các nút trong cài đặt.
 - AudioPlaybackTests: thiết bị phát nhạc/hiệu ứng độc lập, đổi nhạc, bật/tắt và âm lượng. Test này phát âm thanh trong thời gian ngắn.
 
 Tests/bin dùng dữ liệu thành tích riêng, không sửa leaderboard của game. Kiểm tra Scale trong WelcomeFlowTests là mô phỏng; vẫn cần xem giao diện ở DPI Windows 100%, 125%, 150% và nghe âm thanh thực tế.
 
 ## Các phần mã chính
 
-- Form1.cs: trạng thái ván chơi, điều khiển, Hold, bóng dự đoán, tạm dừng và kết thúc ván.
-- Form1.Rendering.cs: bố cục và vẽ bảng, khối, Hold, Next.
+- Form1.cs: trạng thái ván chơi, điều khiển, tạm dừng và kết thúc ván.
+- Form1.Rendering.cs: bố cục và vẽ bảng, khối và Next.
 - GameSetting/AudioSettings.cs: trạng thái bật/tắt và âm lượng.
 - GameSetting/AudioPlayback.cs: phát nhạc và hiệu ứng bằng MCI.
 - Các file *.Designer.cs: control và giao diện chỉnh trong Visual Studio.

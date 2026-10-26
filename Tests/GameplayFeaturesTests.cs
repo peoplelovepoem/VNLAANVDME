@@ -26,40 +26,46 @@ internal static class GameplayFeaturesTests
             game.Show(); ((Timer)Field(game,"gameTimer")).Stop();
             var current = (Block)Field(game,"currentBlock");
             var queue = (Queue<int>)Field(game,"upcoming");
-            Check(queue.Count == 2,"Two next pieces");
-            int first = current.ID, next = queue.Peek();
-            var ghost = (Block)Call(game,"GetGhostBlock");
-            var board = (Board)Field(game,"board");
-            Check(current.y == 0 && !board.CheckCollision(ghost),"Ghost is valid without moving active piece");
-            ghost.y++; Check(board.CheckCollision(ghost),"Ghost stops at landing");
-            Call(game,"HoldCurrentBlock");
-            Check((int)Field(game,"heldId") == first && ((Block)Field(game,"currentBlock")).ID == next,"First hold consumes next");
-            var afterHold = Field(game,"currentBlock");
-            Call(game,"HoldCurrentBlock");
-            Check(ReferenceEquals(afterHold,Field(game,"currentBlock")),"Hold only once per lock");
-            ghost = (Block)Call(game,"GetGhostBlock");
-            ((Block)Field(game,"currentBlock")).y = ghost.y;
-            Call(game,"GameTick",null,EventArgs.Empty);
-            Check(!(bool)Field(game,"holdUsed"),"Lock resets hold permission");
-            int beforeQueue = queue.Peek();
-            Call(game,"HoldCurrentBlock");
-            Check(((Block)Field(game,"currentBlock")).ID == first && queue.Peek() == beforeQueue,"Swap does not consume next");
-            Check(((Block)Field(game,"currentBlock")).y == 0,"Held piece respawns at top");
-            board.Grid[15,4] = 7;
-            current = (Block)Field(game,"currentBlock");
-            int[,] snapshot = (int[,])board.Grid.Clone();
-            ghost = (Block)Call(game,"GetGhostBlock");
-            Check(!board.CheckCollision(ghost),"Ghost valid on stack");
-            for(int r=0;r<20;r++) for(int c=0;c<10;c++)
-                if(snapshot[r,c]!=board.Grid[r,c]) throw new Exception("Ghost changes board");
-            checks++;
+            Check(queue.Count == 1, "One next piece");
+            int next = queue.Peek();
+            foreach (Keys key in new[] { Keys.C, Keys.ShiftKey, Keys.Shift | Keys.ShiftKey })
+            {
+                Call(game, "ProcessCmdKey", new Message(), key);
+                Check(ReferenceEquals(current, Field(game, "currentBlock")) && queue.Peek() == next,
+                    "Former Hold key does not swap pieces");
+            }
+            Check(game.Controls.Find("picHold", true).Length == 0 &&
+                game.Controls.Find("lblHold", true).Length == 0, "Hold controls removed");
+            var board = (Board)Field(game, "board");
+            var boardView = (PictureBox)Field(game, "picBoard");
+            var bounds = (Rectangle)Call(game, "GetBoardRectangle");
+            int cell = bounds.Width / 10;
+            using (var bitmap = new Bitmap(boardView.Width, boardView.Height))
+            {
+                boardView.DrawToBitmap(bitmap, new Rectangle(Point.Empty, boardView.Size));
+                for (int row = 4; row < 20; row++)
+                    for (int col = 0; col < 10; col++)
+                        Check(bitmap.GetPixel(bounds.Left + col * cell + cell / 2,
+                            bounds.Top + row * cell + cell / 2).ToArgb() == boardView.BackColor.ToArgb(),
+                            "Empty board has no landing shadow");
+            }
+            int previousY = current.y;
+            Call(game, "GameTick", null, EventArgs.Empty);
+            Check(current.y == previousY + 1, "Piece falls normally");
+            do { current.y++; } while (!board.CheckCollision(current));
+            current.y--;
+            Call(game, "GameTick", null, EventArgs.Empty);
+            Check(((Block)Field(game, "currentBlock")).ID == next && queue.Count == 1,
+                "Lock spawns the preview and refills one next piece");
+            int occupied = 0;
+            foreach (int value in board.Grid) if (value != 0) occupied++;
+            Check(occupied == 4, "Locked piece stays on board");
             foreach(var size in new[]{new Size(919,611),new Size(1600,900),new Size(700,500)})
             {
                 game.ClientSize = size; Application.DoEvents();
                 var pic=(Control)Field(game,"picBoard");
-                var hold=(Control)Field(game,"picHold");
                 var next2=(Control)Field(game,"picNextBlock");
-                Check(hold.Right < pic.Left && next2.Left > pic.Right,"Hold/Next flank board");
+                Check(next2.Left > pic.Right, "Next stays beside board");
                 Check(pic.Bottom <= game.ClientSize.Height-20 && next2.Bottom < game.ClientSize.Height,"Board and next previews fit");
             }
             // The modal settings form must freeze the engine and elapsed play time.
